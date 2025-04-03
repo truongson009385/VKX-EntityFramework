@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -11,9 +12,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250403094031_OneOne")]
+    partial class OneOne
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -51,13 +54,13 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "c59427af-a96e-4657-8443-6a81c211cd4a",
+                            Id = "39c1cf73-7b6a-41b1-9e20-c6a0a9fb349f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b72d0cb7-226f-4e86-803a-bc2d9c21ddec",
+                            Id = "89b87262-42d6-4799-bd06-616d094d9e3e",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -262,7 +265,8 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
+                    b.HasIndex("AppUserId")
+                        .IsUnique();
 
                     b.HasIndex("StockId");
 
@@ -372,8 +376,8 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Comment", b =>
                 {
                     b.HasOne("api.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
+                        .WithOne("Comment")
+                        .HasForeignKey("api.Models.Comment", "AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -407,6 +411,9 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.AppUser", b =>
                 {
+                    b.Navigation("Comment")
+                        .IsRequired();
+
                     b.Navigation("Portfolios");
                 });
 

@@ -14,6 +14,7 @@ namespace api.Repository
         {
             var stocks = context.Stocks
                 .Include(s => s.Comments)
+                .ThenInclude(c => c.AppUser)
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query.CompanyName))
@@ -96,6 +97,12 @@ namespace api.Repository
         public Task<bool> StockExists(int id)
         {
             return context.Stocks.AnyAsync(s => s.Id == id);
+        }
+
+        public async Task<Stock?> GetBySymbolAsync(string symbol)
+        {
+            return await context.Stocks
+                .FirstOrDefaultAsync(s => s.Symbol == symbol);
         }
     }
 }
